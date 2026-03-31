@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Let's Lock In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/ui/styles.css" />
+</head>
+<body>
+
+  <canvas id="game-canvas"></canvas>
+
+  <!-- Custom cursor -->
+  <div id="cursor"></div>
+
+  <!-- LOADING -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-inner">
+      <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+      <p class="loading-label">Loading room…</p>
+    </div>
+  </div>
+
+  <!-- ROOM UI — floats at bottom, room visible behind it -->
+  <div id="room-ui" class="room-ui hidden">
+
+    <!-- Left: title + todo input -->
+    <div class="rui-left">
+      <h1 class="rui-title">Let's<br>Lock In.</h1>
+
+      <div class="rui-todo-section">
+        <div class="rui-todo-input-row">
+          <input
+            type="text"
+            id="todo-input"
+            class="rui-todo-input"
+            placeholder="Add a task…"
+            maxlength="42"
+            autocomplete="off"
+          />
+          <button id="todo-add-btn" class="rui-todo-add" aria-label="Add task">+</button>
+        </div>
+        <ul id="todo-list" class="rui-todo-list"></ul>
+      </div>
+    </div>
+
+    <!-- Right: timer modes + start -->
+    <div class="rui-right">
+      <div class="rui-modes" id="rui-modes">
+        <button class="rui-mode active" data-work="25" data-break="5" data-sessions="4">
+          <span class="rui-mode-times">25 <em>/</em> 5</span>
+          <span class="rui-mode-name">Classic</span>
+        </button>
+        <button class="rui-mode" data-work="52" data-break="17" data-sessions="4">
+          <span class="rui-mode-times">52 <em>/</em> 17</span>
+          <span class="rui-mode-name">DeskTime</span>
+        </button>
+        <button class="rui-mode" data-work="90" data-break="20" data-sessions="3">
+          <span class="rui-mode-times">90 <em>/</em> 20</span>
+          <span class="rui-mode-name">Ultradian</span>
+        </button>
+      </div>
+
+      <div class="rui-bottom-row">
+        <p class="rui-hint">work / break &nbsp;·&nbsp; min &nbsp;·&nbsp; drag to explore</p>
+        <button id="start-btn" class="rui-start">
+          <span>Lock In</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- HUD — shown while session is running -->
+  <div id="hud" class="hud hidden">
+    <div class="hud-top">
+      <div class="phase-badge" id="phase-badge">FOCUS</div>
+      <div class="timer-ring-wrap">
+        <svg class="timer-ring" viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="52"
+            stroke-dasharray="326.73" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-display">
+          <span id="timer-mm">25</span><span class="colon">:</span><span id="timer-ss">00</span>
+        </div>
+      </div>
+      <div class="session-counter" id="session-counter">Session 1 of 4</div>
+    </div>
+    <div class="hud-bottom">
+      <button id="pause-btn" class="hud-btn">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+        </svg>
+      </button>
+      <button id="reset-btn" class="hud-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Task panel — floating todo list shown during work -->
+  <div id="task-panel" class="task-panel hidden">
+    <p class="task-panel-label">Today's Focus</p>
+    <ul id="task-panel-list" class="task-panel-list"></ul>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Done -->
+  <div id="done-screen" class="done-screen hidden">
+    <h2 class="done-title">Session Complete.</h2>
+    <p id="done-message" class="done-msg"></p>
+    <button id="restart-btn" class="rui-start">Go Again</button>
+  </div>
+
+  <div id="flash-overlay"></div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
