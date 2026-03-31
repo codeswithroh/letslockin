@@ -335,20 +335,16 @@ export class Game {
 
   async _loadAssets() {
     this.ui.showLoading();
-
-    let prog = 0;
-    const tick = setInterval(() => {
-      prog = Math.min(prog + Math.random() * 12, 85);
-      this.ui.setLoadProgress(prog);
-    }, 200);
+    this.ui.setLoadProgress(0);
 
     try {
-      await Promise.all([this.room.load(), this.pill.load()]);
+      await Promise.all([
+        this.room.load(pct => this.ui.setLoadProgress(pct)),
+        this.pill.load(),
+      ]);
     } catch (err) {
       console.error('Load error:', err);
     }
-
-    clearInterval(tick);
     this.ui.setLoadProgress(100);
 
     this._positions = this.room.getPositions();

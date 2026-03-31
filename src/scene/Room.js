@@ -17,8 +17,9 @@ export class Room {
     scene.add(this.group);
   }
 
-  /** Returns a Promise that resolves when the model is loaded */
-  load() {
+  /** Returns a Promise that resolves when the model is loaded.
+   *  @param {function(number):void} [onProgress] - called with 0-100 percent */
+  load(onProgress) {
     return new Promise((resolve, reject) => {
       const loader = new GLTFLoader();
       loader.load(
@@ -30,12 +31,9 @@ export class Room {
             if (obj.isMesh) {
               obj.castShadow    = true;
               obj.receiveShadow = true;
-              // Improve material rendering
               if (obj.material) {
                 const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-                mats.forEach(mat => {
-                  mat.needsUpdate = true;
-                });
+                mats.forEach(mat => { mat.needsUpdate = true; });
               }
             }
           });
@@ -44,7 +42,11 @@ export class Room {
           this._ready = true;
           resolve();
         },
-        undefined,
+        (xhr) => {
+          if (xhr.lengthComputable && onProgress) {
+            onProgress(Math.round((xhr.loaded / xhr.total) * 100));
+          }
+        },
         reject
       );
     });
